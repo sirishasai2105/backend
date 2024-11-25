@@ -21,22 +21,5 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-              options {
-                 timeout(time: 10, unit: 'SECONDS')
-             }
-             steps {
-                sh 'echo   This is Test'
-                // sh 'sleep 11'
-            }
-        }
-        stage('Deploy') {
-            when {
-                expression { env.GIT_BRANCH == "origin/main" }
-            }
-            steps {
-                sh 'echo This is  deploy'
-            }
-        }
     }
 }
