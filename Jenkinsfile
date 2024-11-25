@@ -38,39 +38,5 @@ pipeline {
                 sh 'echo This is  deploy'
             }
         }
-        stage('Print Params') {
-            steps {
-                echo "He llo ${params.PERSON}"
-                echo "Biography: ${params.BIOGRAPHY}"
-                echo "Toggle: ${params.TOGGLE}"
-                echo "Choice: ${params.CHOICE}"
-                echo "Password: ${params.PASSWORD}"  
-            }
-        }
-         stage('Approval'){
-            input {
-                message "Should we continue?"
-                ok "Yes, we should."
-                submitter "alice,bob"
-                parameters {
-                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-                }
-            }
-            steps {
-                echo "Hello, ${PERSON}, nice to meet you."
-            }
-        }
-    }
-    post {
-        always {
-            echo "This section runs always"
-            deleteDir() 
-        }
-        success {
-            echo "This section runs if pipeline is success"
-        }
-        failure {
-            echo "This section runs if pipeline is failed"
-        }
     }
 }
