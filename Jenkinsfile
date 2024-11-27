@@ -54,8 +54,6 @@ pipeline {
                         cd helm-backend
                         sed -i 's/IMAGE_VERSION/${appVersion}/g' values.yaml
                         helm upgrade --install ${component} -n ${project} -f values.yaml .
-
-
                     """
                 }
             }
