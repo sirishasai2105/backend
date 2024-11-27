@@ -1,7 +1,7 @@
 deployment:
   version: v1
   db_host: expense-dev-rds.crmqy82iuaeu.us-east-1.rds.amazonaws.com
-  imageUrl: 311141538313.dkr.ecr.us-east-1.amazonaws.com/expense/backend:1.0.0
+  imageUrl: 311141538313.dkr.ecr.us-east-1.amazonaws.com/expense/backend
   imageVersion: IMAGE_VERSION
 hpa:
   cpuutilization: 15
