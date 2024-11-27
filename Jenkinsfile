@@ -14,6 +14,7 @@ pipeline {
         project = 'expense'
         accountid = '311141538313'
         component = 'backend'
+        environment = 'dev'
     }
     stages {
         stage('Print the version') {
@@ -35,13 +36,27 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds') {
                 sh """
-                aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${accountid}.dkr.ecr.us-east-1.amazonaws.com
-                docker build -t ${accountid}.dkr.ecr.${region}.amazonaws.com/${project}/${component}:${appVersion} .
-                docker images
-                docker push ${accountid}.dkr.ecr.${region}.amazonaws.com/${project}/${component}:${appVersion}
-                
+                    aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${accountid}.dkr.ecr.us-east-1.amazonaws.com
+                    docker build -t ${accountid}.dkr.ecr.${region}.amazonaws.com/${project}/${component}:${appVersion} .
+                    docker images
+                    docker push ${accountid}.dkr.ecr.${region}.amazonaws.com/${project}/${component}:${appVersion}
+                    
 
                 """
+                }
+            }
+        }
+        stage ('Deploy') {
+            steps {
+                withAWS(region: 'us-east-1', credentials: 'aws-creds'){
+                    sh """
+                         aws eks update-kubeconfig --region ${region} --name ${project}-${environment}
+                        cd helm
+                        sed -i 's/IMAGE_VERSION/${appVersion}/g' values-${environment}.yaml
+                        helm upgrade --install ${component} -n ${project} -f values-${environment}.yaml .
+
+
+                    """
                 }
             }
         }
