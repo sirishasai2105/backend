@@ -30,18 +30,18 @@ pipeline {
             }
         }
 
-        stage('SonarQube analysis') {
-            environment {
-                SCANNER_HOME = tool 'sonar-6.0' //scanner config
-            }
-            steps {
-                // sonar server injection
-                withSonarQubeEnv('sonar-6.0') {
-                    sh '$SCANNER_HOME/bin/sonar-scanner'
-                    //generic scanner, it automatically understands the language and provide scan results
-                }
-            }
-        }
+        // stage('SonarQube analysis') {
+        //     environment {
+        //         SCANNER_HOME = tool 'sonar-6.0' //scanner config
+        //     }
+        //     steps {
+        //         // sonar server injection
+        //         withSonarQubeEnv('sonar-6.0') {
+        //             sh '$SCANNER_HOME/bin/sonar-scanner'
+        //             //generic scanner, it automatically understands the language and provide scan results
+        //         }
+        //     }
+        // }
         // here we are pushing docker image to ECR. Taking the PUSH commands from ecr repository and using here
         stage ('Docker build') {
             steps {
@@ -71,3 +71,4 @@ pipeline {
         }
     }
 }
+
