@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'AGENT-1'
-    }
+    agent any
        options{
         timeout(time: 10, unit: 'MINUTES')
         disableConcurrentBuilds()
@@ -29,6 +27,19 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh 'npm install'
+            }
+        }
+
+        stage('SonarQube analysis') {
+            environment {
+                SCANNER_HOME = tool 'sonar-6.0' //scanner config
+            }
+            steps {
+                // sonar server injection
+                withSonarQubeEnv('sonar-6.0') {
+                    sh '$SCANNER_HOME/bin/sonar-scanner'
+                    //generic scanner, it automatically understands the language and provide scan results
+                }
             }
         }
         // here we are pushing docker image to ECR. Taking the PUSH commands from ecr repository and using here
